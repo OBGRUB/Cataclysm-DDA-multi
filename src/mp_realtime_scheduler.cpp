@@ -27,8 +27,10 @@ std::uint32_t mp_realtime_scheduler::advance( time_point now )
         return 0;
     }
 
+    // steady_clock should never move backwards.  If a synthetic/test clock does,
+    // ignore the sample without moving the baseline and double-counting elapsed
+    // time when the clock catches up.
     if( now <= last_update_ ) {
-        last_update_ = now;
         return 0;
     }
 
